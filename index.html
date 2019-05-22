@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+	<title>抽奖</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		html,body {
+			width: 100%;
+			height: 100%;
+		}
+		.main {
+			text-align: center;
+			width: 100%;
+			height: 100%;
+			background-image: url('bg.png');
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+	        font-size: 20px;   
+		}
+		#box1 {
+			display: block;
+		}
+		h2 {
+			color: #00A2E8;
+			padding-top: 50%;
+		}
+		#box1 input {
+			font-size: 20px;
+			height: 30px;
+			margin:20px 0;
+			text-indent: 10px;
+		}
+		#btn {
+			display: inline-block;
+			background: #00A2E8;
+			padding: 10px 20px;
+			margin-top: 30px;
+		}
+		#box2 {
+			width: 80%;
+			margin: 0 10%;
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="main">
+		<div id="box1">
+			<h2>输入消费金额</h2>
+			<input id="amount" type="text" value=""><br>
+		</div>
+		<div id="box2">
+			<h2 id="count"></h2>
+		</div>
+		<div id="btn">开始抽奖</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var btn = document.getElementById('btn');
+	var amount = document.getElementById('amount');
+	var box1 = document.getElementById('box1');
+	var box2 = document.getElementById('box2');
+	var count = document.getElementById('count');
+
+	window.onload = function (){
+		var run = false;
+		btn.addEventListener('touchstart', function () {
+			if(run == false) {
+				var test = /^([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])$/;
+				if(test == '') {
+					alert('请输入金额！');
+				}
+				if(test.exec(amount.value)){
+					begin(amount.value);
+				} else {
+					alert('请输入正确的金额！')
+				}
+			} else {
+				begin(localStorage.getItem('count'));
+			}
+			
+		}, false);
+
+		function begin(val) {
+			if(val < 5) {
+				alert('消费金额低于5元！')
+			}
+			var arr = [];
+			if(val >= 5 && val <= 10) { //1元20%,2元30%,3元10%,5元20%,6元10%,8元5%,10元5%
+				arr = ['1','1','1','1','2','2','2','2','2','2','3','3','5','5','5','5','6','6','8','10']; 
+				common(arr);
+			} else if(val > 10 && val <= 20) { //3元35%,5元30%,10元4%,20元3%,0元28%
+				arr = ['5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','3','10','10','10','10','20','20','20','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+				common(arr);
+			} else if(val > 20 && val <= 50) { //5元30%,10元5%,15元4%,20元3%,0元58%
+				arr = ['5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','10','10','10','10','10','20','20','20','15','15','15','15','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+				common(arr);
+			} else if(val > 50) { //5元30%,10元20%,15元5%,20元4%,25元3%,30元3%,0元35%
+				arr = ['5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','5','10','10','10','10','10','10','10','10','10','10','10','10','10','10','10','10','10','10','10','10','15','15','15','15','15','20','20','20','20','25','25','25','30','30','30','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'];
+				common(arr);
+			}
+		}
+
+		function common(arr) {
+			btn.innerHTML = '停止';
+			box1.style.display = 'none';
+			box2.style.display = 'block';
+			localStorage.setItem('count',amount.value);
+			
+			for (var i = 0; i < arr.length; i++) {
+				if(Number(localStorage.getItem('count')) < Number(arr[i])) {
+					arr.splice(i,1)
+					i--;
+				}	
+			}
+			if (run == true){
+                btn.style.display = 'none';
+				clearInterval(timer);
+				setTimeout(function () {
+					if(count.innerHTML == '谢谢参与') {
+						alert('很遗憾，你未能中奖！')	
+					} else {
+						alert('恭喜你抽中了'+count.innerHTML+'的现金红包！');
+					}
+				},500)
+            } else if(run == false){
+				timer = setInterval(function () {
+					var rand = Math.floor((Math.random()*(arr.length)));
+					if(arr[rand] == '0') {
+						count.innerHTML = '谢谢参与';
+					} else {
+						count.innerHTML = arr[rand]+'元';
+					}
+				},20)
+				run = true;
+            }
+		}
+	}
+    </script>
+</html>
