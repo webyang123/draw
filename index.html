@@ -83,10 +83,11 @@
 		var run = false;
 		btn.addEventListener('touchstart', function () {
 			if(run == false) {
-				var test = /^([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])$/;
 				if(test == '') {
 					alert('请输入金额！');
+					return false
 				}
+				var test = /^([1-9]\d*(\.\d*[1-9])?)|(0\.\d*[1-9])$/;
 				if(test.exec(amount.value)){
 					localStorage.setItem('count',amount.value);
 					begin(amount.value);
