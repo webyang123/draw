@@ -27,18 +27,19 @@
 		}
 		h2 {
 			color: #00A2E8;
-			padding-top: 50%;
 		}
 		#box1 input {
 			font-size: 20px;
-			height: 30px;
-			margin:20px 0;
+			height: 35px;
+			line-height: 35px;
+			margin:20px 0  0 0;
 			text-indent: 10px;
 		}
 		#btn {
 			display: inline-block;
-			background: #00A2E8;
+			background: #3F48CC;
 			padding: 10px 20px;
+			color: white;
 			margin-top: 30px;
 		}
 		#box2 {
@@ -46,12 +47,23 @@
 			margin: 0 10%;
 			display: none;
 		}
+		#count {
+			padding-top: 50%;
+			color: #FFC90E;
+			font-size: 35px;
+		}
+		input {
+			outline: none;
+			border: none;
+			background: white;
+		}
 	</style>
 </head>
 <body>
 	<div class="main">
 		<div id="box1">
-			<h2>输入消费金额</h2>
+			<h1 style="padding: 30% 0 10% 0;color: #22B14C;">会营车行</h1>
+			<h2 style="font-size: 18px;">请输入消费金额</h2>
 			<input id="amount" type="text" value=""><br>
 		</div>
 		<div id="box2">
@@ -76,6 +88,7 @@
 					alert('请输入金额！');
 				}
 				if(test.exec(amount.value)){
+					localStorage.setItem('count',amount.value);
 					begin(amount.value);
 				} else {
 					alert('请输入正确的金额！')
@@ -107,38 +120,38 @@
 		}
 
 		function common(arr) {
-			btn.innerHTML = '停止';
-			box1.style.display = 'none';
-			box2.style.display = 'block';
-			localStorage.setItem('count',amount.value);
-			
 			for (var i = 0; i < arr.length; i++) {
 				if(Number(localStorage.getItem('count')) < Number(arr[i])) {
 					arr.splice(i,1)
 					i--;
 				}	
 			}
-			if (run == true){
-                btn.style.display = 'none';
-				clearInterval(timer);
-				setTimeout(function () {
-					if(count.innerHTML == '谢谢参与') {
-						alert('很遗憾，你未能中奖！')	
-					} else {
-						alert('恭喜你抽中了'+count.innerHTML+'的现金红包！');
-					}
-				},500)
-            } else if(run == false){
-				timer = setInterval(function () {
-					var rand = Math.floor((Math.random()*(arr.length)));
-					if(arr[rand] == '0') {
-						count.innerHTML = '谢谢参与';
-					} else {
-						count.innerHTML = arr[rand]+'元';
-					}
-				},20)
-				run = true;
-            }
+			setTimeout(function () {
+				btn.innerHTML = '停止';
+				box1.style.display = 'none';
+				box2.style.display = 'block';
+				if (run == true){
+	                btn.style.display = 'none';
+					clearInterval(timer);
+					setTimeout(function () {
+						if(count.innerHTML == '谢谢参与') {
+							alert('很遗憾，你未能中奖！')	
+						} else {
+							alert('恭喜你抽中了'+count.innerHTML+'的现金红包！');
+						}
+					},500)
+	            } else if(run == false){
+					timer = setInterval(function () {
+						var rand = Math.floor((Math.random()*(arr.length)));
+						if(arr[rand] == '0') {
+							count.innerHTML = '谢谢参与';
+						} else {
+							count.innerHTML = arr[rand]+'元';
+						}
+					},10)
+					run = true;
+	            }
+			},200)
 		}
 	}
     </script>
